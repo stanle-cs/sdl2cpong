@@ -37,27 +37,26 @@ void blit(SDL_Texture *texture, int x, int y)
 }
 
 //print a message onto the surface
-void printMessage(char* string) {
+void printMessage(char* string, int size, int x, int y) {
 	
-	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Printing message: opening font");
-	TTF_Font * font = TTF_OpenFont("ARIAL.TTF", 25);
+	TTF_Font * font = TTF_OpenFont("ARIAL.TTF", size);
 
-	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Printing message: setting color");
 	SDL_Color color = { 255, 255, 255 };
 
-	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Printing message: creating renderText_Solid");
-	SDL_Surface * textSurface = TTF_RenderText_Solid(font, "Hello world", color);
+	SDL_Surface * textSurface = TTF_RenderText_Solid(font, string, color);
 
 	if (textSurface == NULL) {
-			SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Printing message: cannot create Text");
 	} else {
-		SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Printing message: create texture from surface");
 		SDL_Texture * texture = SDL_CreateTextureFromSurface(app.renderer, textSurface);
-	
-	
+		
+		SDL_Rect dest;
+		SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+		
+		dest.x = x - dest.w / 2;
+		dest.y = y - dest.h / 2;
 
-		blit(texture, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-	
+		SDL_RenderCopy(app.renderer, texture, NULL, &dest);
+
 		TTF_CloseFont(font);
 		SDL_DestroyTexture(texture);
 	}
