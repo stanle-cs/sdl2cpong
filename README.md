@@ -1,5 +1,5 @@
-# SDL2pong
-A clone of pong created using SDL2. 
+# pong in C using SDL2
+A clone of pong created using SDL2 written in C. 
 
 ![Pong](pong.png)
 A very easy two player game.
