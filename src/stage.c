@@ -75,19 +75,26 @@ void initStage(void)
 
 //reset the stage to start again
 static void resetStage() {
+
+	//reset paddles and ball
 	paddle1->x = 0;
 	paddle1->y = (SCREEN_HEIGHT - paddle1->h) / 2;
+
 	paddle2->x = SCREEN_WIDTH - 10;
 	paddle2->y = (SCREEN_HEIGHT - paddle2->h) / 2;
+
 	ball->x = (SCREEN_WIDTH - ball->w) / 2;
 	ball->y = (SCREEN_HEIGHT - ball->h) / 2;
 
 	//this block of code is copied from the initBall procedure.
 	//not sure how to make it work without a global variable.
 	//people says that global variables are bad, are they?
-	int VAL_COUNT = 4;
+	const int VAL_COUNT = 8;
 	int dx = rand() % VAL_COUNT , dy = rand() % VAL_COUNT;
-	float speedVals [4] = {1, -1, 2, -2};
+	while (dx == dy) {
+		dy = rand() % VAL_COUNT;
+	}
+	float speedVals [8] = {1, -1, 2, -2, 1.5, -1.5, 0.77, -0.77};
 	ball->dx = speedVals[dx]*BALL_SPEED;
 	ball->dy = speedVals[dy]*BALL_SPEED;
 }
@@ -185,18 +192,21 @@ static void initBall(void)
 	ball = malloc(sizeof(Object));
 	memset(ball, 0, sizeof(Object));
 	stage.ball = ball;
+
     //set ball parameters
 	srand(time(NULL));
-	int VAL_COUNT = 4;
+	const int VAL_COUNT = 4;
 	int dx = rand() % VAL_COUNT , dy = rand() % VAL_COUNT;
 	float speedVals [4] = {1, -1, 2, -2};
 
-
+	//set ball speed randomly from the speed array
 	ball->dx = speedVals[dx]*BALL_SPEED;
 	ball->dy = speedVals[dy]*BALL_SPEED;
 
 	//ball never die!
 	ball->health = 1;
+
+	//ball texture, width and height
 	ball->texture = loadTexture("gfx/ball.png");
 	SDL_QueryTexture(ball->texture, NULL, NULL, &ball->w, &ball->h);
 	
@@ -211,18 +221,26 @@ static void updateBall(void) {
 	ball->x += ball->dx;
 	ball->y += ball->dy;
 	
-	//if it reaches the end of the screen
-	if (checkCollision(ball, paddle1) || checkCollision(ball, paddle2)) {
+	//handling collisions
+	if (checkCollision(ball, paddle1)) {
 		ball->dx = -ball->dx;
+		ball->x = 10;
 	} 
-	else if (ball->x >= SCREEN_WIDTH) {
+	else if (checkCollision(ball, paddle2)) {
+		ball->dx = -ball->dx;
+		ball->x = SCREEN_WIDTH - 10;
+	}
+	//handling endgame
+	else if (ball->x >= SCREEN_WIDTH - 10) {
 		score1++;
 		resetStage();
 	}
-	else if (ball->x <= 0) {
+	else if (ball->x <= 10) {
 		score2++;
 		resetStage();
 	}
+
+	//handling bouncing off the walls
 	if ((ball->y + ball->h > SCREEN_HEIGHT) || (ball->y < 0)) {
 		ball->dy = -ball->dy;
 	}
@@ -246,11 +264,12 @@ static void drawBall(void) {
 	blit(ball->texture, ball->x, ball->y);
 }
 
+//draw the scores on the two side of the screen
 static void drawScores() {
 	char strScore1[10];
 	char strScore2[10]; 
 	snprintf(strScore1, 10, "%d", score1);
 	snprintf(strScore2, 10, "%d", score2);
-	printMessage(strScore1, 25, 25, 25);
-	printMessage(strScore2, 25, SCREEN_WIDTH - 25, 25);
+	printMessage(strScore1, 60, 25, 35);
+	printMessage(strScore2, 60, SCREEN_WIDTH - 25, 35);
 }

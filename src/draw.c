@@ -43,7 +43,7 @@ void printMessage(char* string, int size, int x, int y) {
 
 	SDL_Color color = { 255, 255, 255 };
 
-	SDL_Surface * textSurface = TTF_RenderText_Solid(font, string, color);
+	SDL_Surface * textSurface = TTF_RenderText_Blended(font, string, color);
 
 	if (textSurface == NULL) {
 	} else {
@@ -51,9 +51,24 @@ void printMessage(char* string, int size, int x, int y) {
 		
 		SDL_Rect dest;
 		SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+
+		//
+		const int PADDING_PIXEL = 5;
+		if (x + dest.w / 2 > SCREEN_WIDTH) {
+			dest.x = SCREEN_WIDTH - dest.w - PADDING_PIXEL;
+		} 
+		else if (x - dest.w / 2 < 0) {
+			dest.x = PADDING_PIXEL;
+		}
+		else dest.x = x - dest.w / 2;
 		
-		dest.x = x - dest.w / 2;
-		dest.y = y - dest.h / 2;
+		if (y + dest.h > SCREEN_HEIGHT) {
+			dest.y = SCREEN_HEIGHT - dest.h - PADDING_PIXEL;
+		} 
+		else if (y - dest.h /2 < 0) {
+			dest.y = PADDING_PIXEL;
+		}
+		else dest.y = y - dest.h / 2;
 
 		SDL_RenderCopy(app.renderer, texture, NULL, &dest);
 
