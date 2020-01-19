@@ -228,7 +228,7 @@ static void updateBall(void) {
 	} 
 	else if (checkCollision(ball, paddle2)) {
 		ball->dx = -ball->dx;
-		ball->x = SCREEN_WIDTH - 10;
+		ball->x = SCREEN_WIDTH - 10 - ball->w;
 	}
 	//handling endgame
 	else if (ball->x >= SCREEN_WIDTH - 10) {

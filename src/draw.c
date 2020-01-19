@@ -39,11 +39,12 @@ void blit(SDL_Texture *texture, int x, int y)
 //print a message onto the surface
 void printMessage(char* string, int size, int x, int y) {
 	
-	TTF_Font * font = TTF_OpenFont("ARIAL.TTF", size);
+	TTF_Font * font = TTF_OpenFont("arial.ttf", size);
 
-	SDL_Color color = { 255, 255, 255 };
+	SDL_Color white = { 255, 255, 255 };
+	SDL_Color black = {0, 0, 0};
 
-	SDL_Surface * textSurface = TTF_RenderText_Blended(font, string, color);
+	SDL_Surface * textSurface = TTF_RenderText_Blended(font, string, white);
 
 	if (textSurface == NULL) {
 	} else {
@@ -71,9 +72,8 @@ void printMessage(char* string, int size, int x, int y) {
 		else dest.y = y - dest.h / 2;
 
 		SDL_RenderCopy(app.renderer, texture, NULL, &dest);
-
-		TTF_CloseFont(font);
 		SDL_DestroyTexture(texture);
 	}
+	TTF_CloseFont(font);
 	SDL_FreeSurface(textSurface);
 }
