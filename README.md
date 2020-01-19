@@ -1,4 +1,4 @@
-# pong in C using SDL2
+# Pong in C using SDL2
 A clone of pong created using SDL2 written in C. 
 
 ![Pong](pong.png)
