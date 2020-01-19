@@ -4,7 +4,7 @@ A clone of pong created using SDL2.
 ![Pong](pong.png)
 A very easy two player game.
 ## About
-The game utilize many tools provided by SDL2 such as image processing, text processing, and window creation.
+The game utilizes many tools provided by SDL2 such as image processing, text processing, and window creation.
 A good thing about this game is that the main SDL2 implementation is pretty much reusable for any other game (with minor changes of course). The main logic of the game is implemented in the stage.c file. This file is kind of big so maybe we can refactor it somehow in the future. For now this is a very nice proof of concept.
 
 # SDL2 on Windows
